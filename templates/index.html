@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTick Reminders</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GreenTick WhatsApp Reminders</h1>
+            <p>Manage customers and schedule WhatsApp reminders with ease.</p>
+        </header>
+
+        <main>
+            <!-- Customer Management -->
+            <section id="customer-section">
+                <h2>Customers</h2>
+                <form id="add-customer-form">
+                    <input type="text" id="customer-name" placeholder="Customer Name" required>
+                    <input type="text" id="customer-phone" placeholder="Phone (e.g., +15551234567)" required>
+                    <button type="submit">Add Customer</button>
+                </form>
+                <div id="customer-list-container">
+                    <h3>Existing Customers</h3>
+                    <ul id="customer-list"></ul>
+                </div>
+            </section>
+
+            <!-- Reminder Management -->
+            <section id="reminder-section">
+                <h2>Reminders</h2>
+                <form id="add-reminder-form">
+                    <select id="reminder-customer" required></select>
+                    <textarea id="reminder-message" placeholder="Reminder Message" required></textarea>
+                    <input type="datetime-local" id="reminder-time" required>
+                    <button type="submit">Schedule Reminder</button>
+                </form>
+                <div id="reminder-list-container">
+                    <h3>Scheduled Reminders</h3>
+                    <ul id="reminder-list"></ul>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>GreenTick Reminder System</p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
