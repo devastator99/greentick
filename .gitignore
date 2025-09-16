@@ -3,6 +3,7 @@
 
 # Virtual environment
 green/
+venv/
 
 # Python cache
 __pycache__/

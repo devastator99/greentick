@@ -3,52 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenTick Reminders</title>
+    <title>GreenTick - WhatsApp Business Automation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>GreenTick WhatsApp Reminders</h1>
-            <p>Manage customers and schedule WhatsApp reminders with ease.</p>
-        </header>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="/static/logo.png" alt="GreenTick Logo" class="logo">
+                <h2>GreenTick</h2>
+                <button id="close-sidebar" class="mobile-only"><i class="fas fa-times"></i></button>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active" data-section="dashboard"><i class="fas fa-chart-line"></i> Dashboard</li>
+                <li data-section="customers"><i class="fas fa-users"></i> Customers</li>
+                <li data-section="reminders"><i class="fas fa-bell"></i> Reminders</li>
+                <li data-section="payments"><i class="fas fa-rupee-sign"></i> Payments</li>
+                <li data-section="profile"><i class="fas fa-user-circle"></i> Profile</li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
 
-        <main>
-            <!-- Customer Management -->
-            <section id="customer-section">
-                <h2>Customers</h2>
-                <form id="add-customer-form">
-                    <input type="text" id="customer-name" placeholder="Customer Name" required>
-                    <input type="text" id="customer-phone" placeholder="Phone (e.g., +15551234567)" required>
-                    <button type="submit">Add Customer</button>
-                </form>
-                <div id="customer-list-container">
-                    <h3>Existing Customers</h3>
-                    <ul id="customer-list"></ul>
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button id="menu-toggle" class="mobile-only"><i class="fas fa-bars"></i></button>
+                <div class="user-info">
+                    <span id="user-name">Welcome, User</span>
+                    <div class="user-avatar">
+                        <img src="/static/avatar.png" alt="User Avatar">
+                    </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Reminder Management -->
-            <section id="reminder-section">
-                <h2>Reminders</h2>
-                <form id="add-reminder-form">
-                    <select id="reminder-customer" required></select>
-                    <textarea id="reminder-message" placeholder="Reminder Message" required></textarea>
-                    <input type="datetime-local" id="reminder-time" required>
-                    <button type="submit">Schedule Reminder</button>
-                </form>
-                <div id="reminder-list-container">
-                    <h3>Scheduled Reminders</h3>
-                    <ul id="reminder-list"></ul>
-                </div>
-            </section>
-        </main>
+            <!-- Content Sections -->
+            <div class="content-wrapper">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="content-section active">
+                    <h1>Dashboard</h1>
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-details">
+                                <h3>Total Customers</h3>
+                                <p id="total-customers">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                            <div class="stat-details">
+                                <h3>Active Reminders</h3>
+                                <p id="active-reminders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-rupee-sign"></i></div>
+                            <div class="stat-details">
+                                <h3>Total Revenue</h3>
+                                <p id="total-revenue">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-details">
+                                <h3>Delivery Rate</h3>
+                                <p id="delivery-rate">0%</p>
+                            </div>
+                        </div>
+                    </div>
 
-        <footer>
-            <p>GreenTick Reminder System</p>
-        </footer>
+                    <div class="dashboard-row">
+                        <div class="dashboard-card">
+                            <h3>Recent Reminders</h3>
+                            <div class="table-container">
+                                <table id="recent-reminders-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Message</th>
+                                            <th>Status</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-reminders-body">
+                                        <!-- Populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a href="#" class="view-all" data-section="reminders">View All</a>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <h3>Recent Payments</h3>
+                            <div class="table-container">
+                                <table id="recent-payments-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-payments-body">
+                                        <!-- Populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a href="#" class="view-all" data-section="payments">View All</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Customers Section -->
+                <section id="customers-section" class="content-section">
+                    <h1>Customers</h1>
+                    <div class="action-bar">
+                        <div class="search-container">
+                            <input type="text" id="customer-search" placeholder="Search customers...">
+                            <button id="search-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div class="action-buttons">
+                            <button id="import-customers-btn" class="btn-secondary"><i class="fas fa-file-import"></i> Import CSV</button>
+                            <button id="add-customer-btn" class="btn-primary"><i class="fas fa-plus"></i> Add Customer</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="customers-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Notes</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customers-body">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Add Customer Modal -->
+                    <div id="add-customer-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Add New Customer</h2>
+                                <span class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <form id="add-customer-form">
+                                    <div class="form-group">
+                                        <label for="customer-name">Name</label>
+                                        <input type="text" id="customer-name" placeholder="Customer Name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customer-phone">Phone</label>
+                                        <input type="text" id="customer-phone" placeholder="Phone (e.g., +15551234567)" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customer-notes">Notes</label>
+                                        <textarea id="customer-notes" placeholder="Additional notes"></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-secondary cancel-btn">Cancel</button>
+                                        <button type="submit" class="btn-primary">Add Customer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Import Customers Modal -->
+                    <div id="import-customers-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Import Customers</h2>
+                                <span class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <form id="import-customers-form">
+                                    <div class="form-group">
+                                        <label for="csv-file">CSV File</label>
+                                        <input type="file" id="csv-file" accept=".csv" required>
+                                        <p class="help-text">CSV should have columns: name, phone, notes (optional)</p>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-secondary cancel-btn">Cancel</button>
+                                        <button type="submit" class="btn-primary">Import</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reminders Section -->
+                <section id="reminders-section" class="content-section">
+                    <h1>Reminders</h1>
+                    <div class="action-bar">
+                        <div class="search-container">
+                            <input type="text" id="reminder-search" placeholder="Search reminders...">
+                            <button id="search-reminders-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div class="action-buttons">
+                            <button id="add-reminder-btn" class="btn-primary"><i class="fas fa-plus"></i> New Reminder</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="reminders-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Message</th>
+                                    <th>Send Time</th>
+                                    <th>Status</th>
+                                    <th>Frequency</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reminders-body">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Add Reminder Modal -->
+                    <div id="add-reminder-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Schedule New Reminder</h2>
+                                <span class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <form id="add-reminder-form">
+                                    <div class="form-group">
+                                        <label for="reminder-customer">Customer</label>
+                                        <select id="reminder-customer" required></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reminder-template">Template (Optional)</label>
+                                        <select id="reminder-template">
+                                            <option value="">Custom Message</option>
+                                            <option value="appointment">Appointment Reminder</option>
+                                            <option value="payment">Payment Reminder</option>
+                                            <option value="follow_up">Follow-up Message</option>
+                                        </select>
+                                    </div>
+                                    <div id="template-variables-container" style="display: none;">
+                                        <!-- Populated by JavaScript based on selected template -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reminder-message">Message</label>
+                                        <textarea id="reminder-message" placeholder="Reminder Message" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reminder-time">Send Time</label>
+                                        <input type="datetime-local" id="reminder-time" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reminder-frequency">Frequency</label>
+                                        <select id="reminder-frequency">
+                                            <option value="one_time">One-time</option>
+                                            <option value="daily">Daily</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                        </select>
+                                    </div>
+                                    <div id="recurring-end-date-container" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="recurring-end-date">End Date</label>
+                                            <input type="date" id="recurring-end-date">
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-secondary cancel-btn">Cancel</button>
+                                        <button type="submit" class="btn-primary">Schedule</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payments Section -->
+                <section id="payments-section" class="content-section">
+                    <h1>Payments</h1>
+                    <div class="action-bar">
+                        <div class="search-container">
+                            <input type="text" id="payment-search" placeholder="Search payments...">
+                            <button id="search-payments-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div class="action-buttons">
+                            <button id="add-payment-btn" class="btn-primary"><i class="fas fa-plus"></i> New Payment</button>
+                        </div>
+                    </div>
+
+                    <div class="payment-stats">
+                        <div class="stat-pill">
+                            <span class="label">Total</span>
+                            <span id="payment-stat-total" class="value">₹0</span>
+                        </div>
+                        <div class="stat-pill success">
+                            <span class="label">Completed</span>
+                            <span id="payment-stat-completed" class="value">₹0</span>
+                        </div>
+                        <div class="stat-pill pending">
+                            <span class="label">Pending</span>
+                            <span id="payment-stat-pending" class="value">₹0</span>
+                        </div>
+                        <div class="stat-pill">
+                            <span class="label">Success Rate</span>
+                            <span id="payment-stat-rate" class="value">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="payments-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payments-body">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Add Payment Modal -->
+                    <div id="add-payment-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Create New Payment</h2>
+                                <span class="close">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <form id="add-payment-form">
+                                    <div class="form-group">
+                                        <label for="payment-customer">Customer</label>
+                                        <select id="payment-customer" required></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="payment-amount">Amount (₹)</label>
+                                        <input type="number" id="payment-amount" min="1" step="0.01" placeholder="Amount" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="payment-description">Description</label>
+                                        <input type="text" id="payment-description" placeholder="Payment description" required>
+                                    </div>
+                                    <div class="form-group checkbox-group">
+                                        <input type="checkbox" id="send-payment-link" checked>
+                                        <label for="send-payment-link">Send payment link via WhatsApp</label>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-secondary cancel-btn">Cancel</button>
+                                        <button type="submit" class="btn-primary">Create Payment</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Section -->
+                <section id="profile-section" class="content-section">
+                    <h1>Business Profile</h1>
+                    <div class="profile-container">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <img id="business-logo-preview" src="/static/business-placeholder.png" alt="Business Logo">
+                                    <div class="avatar-overlay">
+                                        <i class="fas fa-camera"></i>
+                                        <input type="file" id="business-logo-upload" accept="image/*">
+                                    </div>
+                                </div>
+                                <h2 id="profile-business-name">Your Business</h2>
+                            </div>
+                            <div class="profile-body">
+                                <form id="business-profile-form">
+                                    <div class="form-group">
+                                        <label for="business-name">Business Name</label>
+                                        <input type="text" id="business-name" placeholder="Your Business Name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="business-whatsapp">WhatsApp Number</label>
+                                        <input type="text" id="business-whatsapp" placeholder="WhatsApp Business Number" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user-email">Email</label>
+                                        <input type="email" id="user-email" placeholder="Your Email" required readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user-phone">Phone</label>
+                                        <input type="text" id="user-phone" placeholder="Your Phone Number">
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to GreenTick</h2>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email or Phone</label>
+                        <input type="text" id="login-email" placeholder="Enter email or phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="show-signup" class="btn-link">Create Account</button>
+                        <button type="submit" class="btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create GreenTick Account</h2>
+            </div>
+            <div class="modal-body">
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" placeholder="Enter email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-phone">Phone</label>
+                        <input type="text" id="signup-phone" placeholder="Enter phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" placeholder="Create password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-business">Business Name</label>
+                        <input type="text" id="signup-business" placeholder="Your business name">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="show-login" class="btn-link">Already have an account?</button>
+                        <button type="submit" class="btn-primary">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/app.js"></script>
 </body>
 </html>
