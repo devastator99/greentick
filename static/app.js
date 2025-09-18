@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // API URL
-    const API_URL = 'http://127.0.0.1:8001';
+    const API_URL = 'http://127.0.0.1:8000';
     
     // Authentication state
     let authToken = localStorage.getItem('authToken');
